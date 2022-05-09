@@ -15,9 +15,6 @@
             android:name=".MainApp.MainActivity2"
             android:exported="false" />
         <activity
-            android:name=".MainApp.SharedPreference"
-            android:exported="false" />
-        <activity
             android:name=".MainApp.MainActivity"
             android:exported="true" >
             <intent-filter>
