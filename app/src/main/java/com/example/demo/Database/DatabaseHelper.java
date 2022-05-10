@@ -1,6 +1,7 @@
 package com.example.demo.Database;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -19,6 +20,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         DB_PATH = "/data/data/" + context.getPackageName() + "databases";
         this.context = context;
 
+    }
+
+    public boolean openDataBase() throws SQLException {
+        // Open the database
+        String myPath = DB_PATH + DB_NAME;
+        mDb = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+        return mDb != null;
     }
 
     private static final String TABLE_CREATE_LOGIN = "create table if not exists login(id integer primary key autoincrement, name text, email_id text, " +

@@ -61,6 +61,7 @@ public class DatabaseCon {
     }
 
 
+
     @SuppressLint("Range")
     public ArrayList<UserModel> getUSerList() {
         ArrayList<UserModel> complaints = new ArrayList<UserModel>();
@@ -88,8 +89,12 @@ public class DatabaseCon {
                     if (c.moveToFirst() && c.getCount() > 0) {
                         do {
                             UserModel userModel = new UserModel();
+                            userModel.setId(c.getString(c.getColumnIndex("id")));
                             userModel.setName(c.getString(c.getColumnIndex("name")));
                             userModel.setEmail_id(c.getString(c.getColumnIndex("email_id")));
+                            userModel.setContact_no(c.getString(c.getColumnIndex("contact_no")));
+                            userModel.setAddress(c.getString(c.getColumnIndex("address")));
+                            userModel.setPassword(c.getString(c.getColumnIndex("password")));
                              Log.e("UserModel status++", userModel.getName());
                             complaints.add(userModel);
 
@@ -106,5 +111,42 @@ public class DatabaseCon {
         }
         return complaints;
     }
+
+
+    public boolean delete(String DATABASE_TABLE, String KEY_NAME, String value) {
+        if (!database.isOpen()) {
+
+            try {
+                dbHelper.openDataBase();
+                database = dbHelper.getReadableDatabase();
+
+            } catch (SQLException mSQLException) {
+                Log.e("TAG", "open >>" + mSQLException.toString());
+                throw mSQLException;
+            }
+        }
+        return database.delete(DATABASE_TABLE, KEY_NAME + "=" + value, null) > 0;
+    }
+
+
+    public int update(String table, ContentValues cv, String whereClause, String whereArgs[]) {
+        dbHelper.openDataBase();
+        database = dbHelper.getWritableDatabase();
+        if (!database.isOpen()) {
+
+            try {
+                dbHelper.openDataBase();
+                database = dbHelper.getWritableDatabase();
+
+            } catch (SQLException mSQLException) {
+                Log.e("TAG", "open >>" + mSQLException.toString());
+                throw mSQLException;
+            }
+        }
+        int row_id = database.update(table, cv, whereClause, whereArgs);
+
+        return row_id;
+    }
+
 
 }
