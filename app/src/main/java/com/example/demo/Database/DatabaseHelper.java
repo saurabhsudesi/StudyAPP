@@ -5,15 +5,21 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
-
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+
     public static final int DB_VERSION = 1;
     private static final String TAG = "DbHelper";
+
     public static String DB_NAME = "demo.sqlite";
     private static String DB_PATH = "";
+    private static SQLiteDatabase mDb;
     Context context;
-    private  static  SQLiteDatabase mDb;
+
+
+//create table
+    private static final String TABLE_CREATE_LOGIN = "create table if not exists login(id integer primary key autoincrement, name text, email_id text, " +
+            "contact_no text,address text ,password text)";
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -22,6 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+//    open database
     public boolean openDataBase() throws SQLException {
         // Open the database
         String myPath = DB_PATH + DB_NAME;
@@ -29,9 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return mDb != null;
     }
 
-    private static final String TABLE_CREATE_LOGIN = "create table if not exists login(id integer primary key autoincrement, name text, email_id text, " +
-            "contact_no text,address text ,password text)";
-
+//on create method
     @Override
     public void onCreate(SQLiteDatabase db) {
         this.mDb = db;
@@ -40,6 +45,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+
+    /*on Upgrade Method*/
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 

@@ -1,5 +1,6 @@
 package com.example.demo.MainApp;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,13 +10,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.demo.Database.DatabaseCon;
+import com.example.demo.Database.DatabaseAdapter;
 import com.example.demo.Helper.RequiredFunction;
-import com.example.demo.Model.UserModel;
 import com.example.demo.R;
 import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.ArrayList;
 
 public class UpdateDetailsActivity extends AppCompatActivity {
     TextInputEditText name, email_id, contact_no, address, password;
@@ -23,17 +21,18 @@ public class UpdateDetailsActivity extends AppCompatActivity {
     String str_name = "", str_emailId = "", str_contactNo = "", str_address = "", str_password = "";
     String path;
     RequiredFunction rf;
-    DatabaseCon db;
+    DatabaseAdapter db;
     String[] values;
-
+    int responseID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_details);
-        db = new DatabaseCon(UpdateDetailsActivity.this);
+        db = new DatabaseAdapter(UpdateDetailsActivity.this);
         db.open();
 
+        String strid = getIntent().getStringExtra("id");
         String strname = getIntent().getStringExtra("name");
         String stremail = getIntent().getStringExtra("email");
         String strcontnact = getIntent().getStringExtra("contact");
@@ -61,7 +60,7 @@ public class UpdateDetailsActivity extends AppCompatActivity {
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String[] columns = new String[]{"name", "email_id", "contact_no", "address", "password"};
+
 
                 str_name = name.getText().toString().trim();
                 str_emailId = email_id.getText().toString();
@@ -78,18 +77,21 @@ public class UpdateDetailsActivity extends AppCompatActivity {
                                     /*sample*/
                                     try {
                                         db.open();
-                                        values = new String[]{str_name, str_emailId, str_contactNo, str_address, str_password};
-                                        boolean result = db.insert(values, columns, "login");
-                                        if (result) {
+                                        ContentValues cv = new ContentValues();
+                                        cv.put("name",str_name);
+                                        cv.put("email_id",str_emailId);
+                                        cv.put("contact_no",str_contactNo);
+                                        cv.put("address",str_address);
+                                        cv.put("password",str_password);
 
-                                            email_id.setText("");
-                                            contact_no.setText("");
-                                            address.setText("");
-                                            password.setText("");
-                                            name.setText("");
-                                            Intent intent = new Intent(UpdateDetailsActivity.this, MainActivity2.class);
+                                        responseID = db.update("login",cv,"id='"+strid+"'",null);
+                                        if (responseID>0) {
+                                            Intent intent = new Intent(UpdateDetailsActivity.this,MainActivity2.class);
                                             startActivity(intent);
-                                            Toast.makeText(UpdateDetailsActivity.this, "Result:-   " + result, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(UpdateDetailsActivity.this, "Result:-   " + responseID, Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            Toast.makeText(UpdateDetailsActivity.this, "Result:-   " + responseID, Toast.LENGTH_SHORT).show();
+
                                         }
                                         db.close();
                                     } catch (Exception e) {

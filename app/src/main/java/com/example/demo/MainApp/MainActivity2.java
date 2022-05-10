@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demo.Adapter.UserAdapter;
-import com.example.demo.Database.DatabaseCon;
+import com.example.demo.Database.DatabaseAdapter;
 import com.example.demo.Model.UserModel;
 import com.example.demo.R;
 
@@ -20,16 +20,16 @@ public class MainActivity2 extends AppCompatActivity {
     RecyclerView recyclerView;
     UserAdapter userAdapter;
     ArrayList<UserModel> userModelArrayList = new ArrayList<>();
-    DatabaseCon databaseCon;
+    DatabaseAdapter databaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        databaseCon = new DatabaseCon(MainActivity2.this);
-        databaseCon.open();
+        databaseAdapter = new DatabaseAdapter(MainActivity2.this);
+        databaseAdapter.open();
 
-        userModelArrayList=databaseCon.getUSerList();
+        userModelArrayList= databaseAdapter.getUSerList();
 
         if (userModelArrayList.size()>0){
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);

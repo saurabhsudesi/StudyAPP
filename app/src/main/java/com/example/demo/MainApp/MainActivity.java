@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.demo.Database.DatabaseCon;
+import com.example.demo.Database.DatabaseAdapter;
 import com.example.demo.Helper.RequiredFunction;
 import com.example.demo.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     String str_name = "", str_emailId = "", str_contactNo = "", str_address = "", str_password = "";
     String path;
     RequiredFunction rf;
-    DatabaseCon db;
+    DatabaseAdapter databaseAdapter;
     String[] values;
 
 
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = new DatabaseCon(MainActivity.this);
+        databaseAdapter = new DatabaseAdapter(MainActivity.this);
 
         rf = new RequiredFunction();
         name = findViewById(R.id.name);
@@ -62,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
                                     /*sample*/
                                     try {
-                                        db.open();
+                                        databaseAdapter.open();
                                         values = new String[]{str_name, str_emailId, str_contactNo, str_address, str_password};
-                                        boolean result = db.insert(values, columns, "login");
+                                        boolean result = databaseAdapter.insert(values, columns, "login");
+
                                         if (result) {
 
                                             email_id.setText("");
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                                             startActivity(intent);
                                             Toast.makeText(MainActivity.this, "Result:-   " + result, Toast.LENGTH_SHORT).show();
                                         }
-                                        db.close();
+                                        databaseAdapter.close();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         Log.e("checkError", "" + e.toString());

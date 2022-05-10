@@ -11,23 +11,18 @@ import android.util.Log;
 import com.example.demo.Model.UserModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class DatabaseCon {
+public class DatabaseAdapter {
     private Context context;
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
 
-
-/*    private SQLiteDatabase database;
-    private HafeleFaultReportDBHelper dbHelper;*/
-
-    public DatabaseCon(Context context) {
+    public DatabaseAdapter(Context context) {
         this.context = context;
         dbHelper = new DatabaseHelper(context);
     }
 
-    public DatabaseCon open() throws SQLException {
+    public DatabaseAdapter open() throws SQLException {
         try {
 
             database = dbHelper.getWritableDatabase();
@@ -42,10 +37,12 @@ public class DatabaseCon {
         dbHelper.close();
     }
 
+
+    //insert data in local DB
     public boolean insert(String values[], String names[], String tbl) {
         ContentValues initialValues = createContentValues(values, names);
 
-        return database.insert(tbl, null, initialValues)>0;
+        return database.insert(tbl, null, initialValues) > 0;
     }
 
     private ContentValues createContentValues(String values[], String names[]) {
@@ -53,7 +50,7 @@ public class DatabaseCon {
 
         for (int i = 0; i < values.length; i++) {
             values1.put(names[i], values[i]);
-            Log.e("values",""+values.length);
+            Log.e("values", "" + values.length);
 
         }
 
@@ -61,7 +58,7 @@ public class DatabaseCon {
     }
 
 
-
+    //get array list in local DB
     @SuppressLint("Range")
     public ArrayList<UserModel> getUSerList() {
         ArrayList<UserModel> complaints = new ArrayList<UserModel>();
@@ -95,7 +92,7 @@ public class DatabaseCon {
                             userModel.setContact_no(c.getString(c.getColumnIndex("contact_no")));
                             userModel.setAddress(c.getString(c.getColumnIndex("address")));
                             userModel.setPassword(c.getString(c.getColumnIndex("password")));
-                             Log.e("UserModel status++", userModel.getName());
+                            Log.e("UserModel status++", userModel.getName());
                             complaints.add(userModel);
 
                         } while (c.moveToNext());
@@ -113,6 +110,7 @@ public class DatabaseCon {
     }
 
 
+    //delete locla data
     public boolean delete(String DATABASE_TABLE, String KEY_NAME, String value) {
         if (!database.isOpen()) {
 
@@ -128,10 +126,9 @@ public class DatabaseCon {
         return database.delete(DATABASE_TABLE, KEY_NAME + "=" + value, null) > 0;
     }
 
-
+    //update local data
     public int update(String table, ContentValues cv, String whereClause, String whereArgs[]) {
-        dbHelper.openDataBase();
-        database = dbHelper.getWritableDatabase();
+
         if (!database.isOpen()) {
 
             try {

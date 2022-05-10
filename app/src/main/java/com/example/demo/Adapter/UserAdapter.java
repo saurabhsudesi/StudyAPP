@@ -16,7 +16,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.demo.Database.DatabaseCon;
+import com.example.demo.Database.DatabaseAdapter;
 import com.example.demo.MainApp.MainActivity;
 import com.example.demo.MainApp.UpdateDetailsActivity;
 import com.example.demo.Model.UserModel;
@@ -27,13 +27,13 @@ import java.util.ArrayList;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> {
     Context mContext;
     ArrayList<UserModel> userModelArrayList;
-    DatabaseCon databaseCon;
+    DatabaseAdapter databaseAdapter;
 
     public UserAdapter(Context mContext, ArrayList<UserModel> userModelArrayList) {
         this.mContext = mContext;
         this.userModelArrayList = userModelArrayList;
-        databaseCon = new DatabaseCon(mContext);
-        databaseCon.open();
+        databaseAdapter = new DatabaseAdapter(mContext);
+        databaseAdapter.open();
 
     }
 
@@ -65,7 +65,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                         new DialogInterface.OnClickListener() {
                             @RequiresApi(api = Build.VERSION_CODES.N)
                             public void onClick(DialogInterface dialog, int id) {
-                                boolean result = databaseCon.delete("login", "id", "'" + userModel.getId() + "'");
+                                boolean result = databaseAdapter.delete("login", "id", "'" + userModel.getId() + "'");
                                 Log.e("result", "result===" + result);
                                 //Do your code...
                                 if (result) {
@@ -84,6 +84,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent intent = new Intent(mContext, UpdateDetailsActivity.class);
+                                intent.putExtra("id",userModel.getId());
                                 intent.putExtra("name",userModel.getName());
                                 intent.putExtra("email",userModel.getEmail_id());
                                 intent.putExtra("contact",userModel.getContact_no());
